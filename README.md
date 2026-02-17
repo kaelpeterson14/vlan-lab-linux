@@ -46,15 +46,16 @@ The lab simulates four network zones:
 Topology diagram:
 
 ```text
-                 (router namespace)
-    ------------------------------------------------
-    |            |             |                  |
-192.168.10.1 192.168.20.1 192.168.30.1 192.168.99.1
-|                |             |                  |
-br10           br20          br30                br99
-Users         Servers       Guest                Mgmt
-|                |            |                    |
-host1          host2       guest1                mgmt1
+                                      (router namespace)
+    -------------------------------------------------------
+        |               |               |               |
+   192.168.10.1   192.168.20.1   192.168.30.1   192.168.99.1
+        |               |               |               |
+       br10            br20            br30            br99
+      Users           Servers          Guest            Mgmt
+        |               |               |               |
+      host1           host2           guest1           mgmt1
+
 
 Concept Mapping
 
