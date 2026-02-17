@@ -46,7 +46,7 @@ The lab simulates four network zones:
 Topology diagram:
 
 ```text
-                                      (router namespace)
+                        (router namespace)
     -------------------------------------------------------
         |               |               |               |
    192.168.10.1   192.168.20.1   192.168.30.1   192.168.99.1
