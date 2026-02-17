@@ -54,10 +54,10 @@ Topology diagram:
      br10     br20     br30     br99
       |        |        |        |
     host1    host2    guest1    mgmt1
+```
 
 
-
-Concept Mapping
+## Concept Mapping
 
 | Networking Concept | Linux Primitive                    |
 | ------------------ | ---------------------------------- |
@@ -69,7 +69,7 @@ Concept Mapping
 | ACL                | iptables `FORWARD` rules           |
 | Default gateway    | Router interface IP                |
 
-##Project Phases
+## Project Phases
 
 **Phase 2 — Layer 2 Segmentation**
 
@@ -144,15 +144,17 @@ Behavior:
 
 Stateful behavior implemented using conntrack.
 
-##Repository Structure
-scripts/
-├── phase2.sh    # Layer 2 topology creation
-├── phase3.sh    # Router and inter-VLAN routing
-├── acl.sh       # Firewall rules
-├── clean.sh     # Environment teardown
-└── run_lab.sh   # Full lab execution
+## Repository Structure
 
-##Running the Lab
+```text
+scripts/
+├── phase2.sh     # Layer 2 topology creation
+├── phase3.sh     # Router and inter-VLAN routing
+├── acl.sh        # Firewall rules
+├── clean.sh      # Environment teardown
+└── run_lab.sh    # Full lab execution
+```
+## Running the Lab
 From the repository root:
 chmod +x scripts/*.sh
 sudo ./scripts/run_lab.sh
@@ -160,12 +162,16 @@ sudo ./scripts/run_lab.sh
 This performs the following sequence:
 clean → phase2 → phase3 → acl
 
-##Verification Examples
+## Verification Examples
 
 Example validation commands:
+
 ip netns exec host1 ping 192.168.20.2
+
 ip netns exec guest1 ping 192.168.20.2
+
 ip netns exec router iptables -L -v
+
 ip netns exec router conntrack -L
 
 Expected results:
