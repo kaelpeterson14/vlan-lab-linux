@@ -27,8 +27,6 @@ The implementation mirrors networking concepts commonly used in:
 - Enterprise networks
 - Cloud VPC architectures
 - Container networking
-- DevOps and infrastructure environments
-- ML infrastructure networking
 
 ---
 
