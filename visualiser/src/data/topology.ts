@@ -254,5 +254,21 @@ export const aclRules: AclRule[] = [
         protocol: "icmp",
         description: "Explicitly allow ICMP echo-reply (ping response) from Servers back to Users. Typically covered by the ESTABLISHED rule, but made explicit here for demo clarity.",
         iptablesCmd: "iptables -A FORWARD -p icmp --icmp-type echo-reply -s 192.168.20.0/24 -d 192.168.10.0/24 -j ACCEPT"
+    },]
+export const phases = {
+    2: {
+        nodeIds: ["host1", "host2", "guest1", "mgmt1", "br10", "br20", "br30", "br99"],
+        edgeIds: ["veth-host1--br10", "veth-host2--br20", "veth-guest--br30", "veth-mgmt--br99"],
+        description: "Phase 2: Layer 2 only. Hosts and bridges exist but there is no router. Each subnet is a completely isolated broadcast domain. No traffic can cross between subnets."
     },
-]
+    3: {
+        nodeIds: ["host1", "host2", "guest1", "mgmt1", "br10", "br20", "br30", "br99", "router"],
+        edgeIds: ["veth-host1--br10", "veth-host2--br20", "veth-guest--br30", "veth-mgmt--br99", "veth-r10--br10", "veth-r20--br20", "veth-r30--br30", "veth-r99--br99"],
+        description: "Phase 3: Router namespace added. IP forwarding enabled. All hosts have a default route. All subnets can now reach each other freely — no firewall yet."
+    },
+    4: {
+        nodeIds: ["host1", "host2", "guest1", "mgmt1", "br10", "br20", "br30", "br99", "router"],
+        edgeIds: ["veth-host1--br10", "veth-host2--br20", "veth-guest--br30", "veth-mgmt--br99", "veth-r10--br10", "veth-r20--br20", "veth-r30--br30", "veth-r99--br99"],
+        description: "Phase 4: ACL applied. Default FORWARD policy is DROP. Only permitted flows are: Management to anywhere, Users to Servers, and established return traffic. Guest is fully blocked."
+    },
+}
