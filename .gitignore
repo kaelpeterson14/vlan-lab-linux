@@ -1,0 +1,24 @@
+# Node
+visualizer/node_modules/
+visualizer/dist/
+visualizer/.vite/
+
+# Python (for future scripts)
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Vim swap files (these are already in your repo, we'll clean those)
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
