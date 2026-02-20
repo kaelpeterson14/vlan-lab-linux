@@ -11,9 +11,12 @@ function App() {
 
   return (
     <div className="w-screen h-screen bg-gray-950 flex flex-col">
-      <div className="p-4 border-b border-gray-800 flex items-center gap-6">
-        <h1 className="text-white font-mono text-lg">VLAN Lab Visualizer</h1>
-        <PhaseToggle />
+      <div className="border-b border-gray-800">
+        <div className="p-4 flex items-center gap-6">
+          <h1 className="text-white font-mono text-lg">VLAN Lab Visualizer</h1>
+          <PhaseToggle />
+        </div>
+        <ConceptsPanel />
       </div>
       <div className="flex-1 flex overflow-hidden">
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -21,7 +24,6 @@ function App() {
             <TopologyCanvas />
             <NodeInspector />
           </div>
-          <ConceptsPanel />
           {currentPhase === 4 && <PacketSimulator />}
         </div>
         {currentPhase === 4 && <AclInspector />}

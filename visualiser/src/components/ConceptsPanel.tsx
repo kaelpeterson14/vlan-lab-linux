@@ -1,3 +1,5 @@
+import Collapsible from "./Collapsible"
+
 const concepts = [
     { linux: "Network namespace", real: "Physical host / PC" },
     { linux: "Linux bridge", real: "Ethernet switch / VLAN" },
@@ -9,9 +11,8 @@ const concepts = [
 
 export default function ConceptsPanel() {
     return (
-        <div className="border-t border-gray-800 bg-gray-950 p-4 font-mono">
-            <h2 className="text-white text-sm font-bold mb-3">Linux → Real Network</h2>
-            <div className="flex flex-wrap gap-2">
+        <Collapsible title="Linux → Real Network" defaultOpen={false}>
+            <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {concepts.map(c => (
                     <div key={c.linux} className="flex gap-2 items-center text-xs border border-gray-700 rounded px-3 py-1 bg-gray-900">
                         <span className="text-blue-400">{c.linux}</span>
@@ -20,6 +21,6 @@ export default function ConceptsPanel() {
                     </div>
                 ))}
             </div>
-        </div>
+        </Collapsible>
     )
 }

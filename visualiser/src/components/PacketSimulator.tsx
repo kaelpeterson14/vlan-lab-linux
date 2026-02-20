@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useLabStore } from "../store/labstore"
 import { matchAcl } from "../utils/matchAcl"
 import type { ActivePacket } from "../store/labstore"
+import Collapsible from "./Collapsible"
 
 const hosts = ["host1", "host2", "guest1", "mgmt1"]
 const protocols = ["tcp", "icmp"] as const
@@ -22,9 +23,8 @@ export default function PacketSimulator() {
     }
 
     return (
-        <div className="border-t border-gray-800 bg-gray-950 p-4 font-mono">
-            <h2 className="text-white text-sm font-bold mb-3">Packet Simulator</h2>
-            <div className="flex gap-3 items-end flex-wrap">
+        <Collapsible title="Packet Simulator">
+            <div className="px-4 pb-4 flex gap-3 items-end flex-wrap">
                 <div className="flex flex-col gap-1">
                     <label className="text-gray-500 text-xs">Source</label>
                     <select
@@ -63,13 +63,13 @@ export default function PacketSimulator() {
                 </button>
                 {result && (
                     <div className={`text-sm font-bold px-3 py-1 rounded border ${result === "ACCEPT"
-                            ? "text-green-400 border-green-700 bg-green-950"
-                            : "text-red-400 border-red-700 bg-red-950"
+                        ? "text-green-400 border-green-700 bg-green-950"
+                        : "text-red-400 border-red-700 bg-red-950"
                         }`}>
                         {result}
                     </div>
                 )}
             </div>
-        </div>
+        </Collapsible>
     )
 }
