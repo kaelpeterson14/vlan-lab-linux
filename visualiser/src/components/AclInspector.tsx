@@ -1,5 +1,5 @@
 import { aclRules } from "../data/topology"
-import { useLabStore } from "../store/labstore"
+import { useLabStore } from "../store/labStore"
 import Collapsible from "./Collapsible"
 
 const actionColors: Record<string, string> = {
@@ -18,8 +18,8 @@ export default function AclInspector() {
                         <div
                             key={rule.id}
                             className={`border rounded p-3 text-xs transition-colors font-mono ${lastMatchedRule?.id === rule.id
-                                    ? "border-yellow-400 bg-yellow-950"
-                                    : "border-gray-700 bg-gray-900"
+                                ? "border-yellow-400 bg-yellow-950"
+                                : "border-gray-700 bg-gray-900"
                                 }`}
                         >
                             <div className={`font-bold mb-1 ${actionColors[rule.action]}`}>

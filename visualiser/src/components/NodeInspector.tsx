@@ -1,4 +1,4 @@
-import { useLabStore } from "../store/labstore"
+import { useLabStore } from "../store/labStore"
 import { nodes } from "../data/topology"
 
 export default function NodeInspector() {

@@ -1,5 +1,5 @@
 import { aclRules, type AclRule } from "../data/topology"
-import type { ActivePacket } from "../store/labstore"
+import type { ActivePacket } from "../store/labStore"
 
 const cidrToPrefix = (cidr: string): string => cidr.split("/")[0].slice(0, cidr.indexOf(".") > 0 ? 7 : 7)
 

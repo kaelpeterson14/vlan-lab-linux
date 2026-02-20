@@ -4,7 +4,8 @@ import AclInspector from './components/AclInspector'
 import PacketSimulator from './components/PacketSimulator'
 import NodeInspector from './components/NodeInspector'
 import ConceptsPanel from './components/ConceptsPanel'
-import { useLabStore } from './store/labstore'
+import ZoneLegend from './components/ZoneLegend'
+import { useLabStore } from './store/labStore'
 
 function App() {
   const { currentPhase } = useLabStore()
@@ -12,9 +13,12 @@ function App() {
   return (
     <div className="w-screen h-screen bg-gray-950 flex flex-col">
       <div className="border-b border-gray-800">
-        <div className="p-4 flex items-center gap-6">
-          <h1 className="text-white font-mono text-lg">VLAN Lab Visualizer</h1>
-          <PhaseToggle />
+        <div className="p-4 flex items-start gap-6">
+          <h1 className="text-white font-mono text-lg shrink-0">VLAN Lab Visualizer</h1>
+          <div className="flex flex-col gap-3 flex-1">
+            <PhaseToggle />
+            <ZoneLegend />
+          </div>
         </div>
         <ConceptsPanel />
       </div>

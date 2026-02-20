@@ -14,6 +14,7 @@ export interface NetworkNode {
     zone: Zone
     interfaces: NetworkInterface[]
     description: string
+    [key: string]: unknown
 }
 export interface VethPair {
     id: string

@@ -1,14 +1,21 @@
 import { ReactFlow, Background, Controls, type Node } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { nodes as topoNodes, edges as topoEdges } from "../data/topology"
-import { useLabStore } from "../store/labstore"
-import { phases, type NetworkNode } from "../data/topology"
+import { nodes as topoNodes, edges as topoEdges, phases } from "../data/topology"
+import type { NetworkNode } from "../data/topology"
+import { useLabStore } from "../store/labStore"
 import NetworkNodeComponent from "./NetworkNode"
 import BridgeNode from "./BridgeNode"
+import VethEdge from "./VethEdge"
+
+export type FlowNode = Node<NetworkNode>
 
 const nodeTypes = {
     namespace: NetworkNodeComponent,
     bridge: BridgeNode,
+}
+
+const edgeTypes = {
+    veth: VethEdge,
 }
 
 const positions: Record<string, { x: number; y: number }> = {
@@ -23,20 +30,17 @@ const positions: Record<string, { x: number; y: number }> = {
     router: { x: 500, y: 400 },
 }
 
-// ReactFlow expects data to be Record<string, unknown> (have an index signature)
-type FlowNetworkNode = NetworkNode & Record<string, unknown>
-
 export default function TopologyCanvas() {
     const { currentPhase, setSelectedNodeId } = useLabStore()
     const activePhase = phases[currentPhase]
 
-    const visibleNodes: Node<FlowNetworkNode>[] = topoNodes
+    const visibleNodes: FlowNode[] = topoNodes
         .filter(n => activePhase.nodeIds.includes(n.id))
         .map(n => ({
             id: n.id,
             type: n.kind,
             position: positions[n.id],
-            data: n as FlowNetworkNode,
+            data: n,
         }))
 
     const visibleEdges = topoEdges
@@ -45,14 +49,17 @@ export default function TopologyCanvas() {
             id: e.id,
             source: e.source,
             target: e.target,
+            type: "veth",
+            data: { description: e.description },
         }))
 
     return (
         <div className="w-full h-full">
-            <ReactFlow<Node<FlowNetworkNode>>
+            <ReactFlow
                 nodes={visibleNodes}
                 edges={visibleEdges}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 onNodeClick={(_, node) => setSelectedNodeId(node.id)}
                 fitView
             >

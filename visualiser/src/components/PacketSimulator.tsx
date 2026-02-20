@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { useLabStore } from "../store/labstore"
+import { useLabStore } from "../store/labStore"
 import { matchAcl } from "../utils/matchAcl"
-import type { ActivePacket } from "../store/labstore"
+import type { ActivePacket } from "../store/labStore"
 import Collapsible from "./Collapsible"
 
 const hosts = ["host1", "host2", "guest1", "mgmt1"]
@@ -13,6 +13,7 @@ export default function PacketSimulator() {
     const [dst, setDst] = useState("host2")
     const [protocol, setProtocol] = useState<"tcp" | "icmp">("tcp")
     const [result, setResult] = useState<"ACCEPT" | "DROP" | null>(null)
+    const [animKey, setAnimKey] = useState(0)
 
     function simulate() {
         const packet: ActivePacket = { srcId: src, dstId: dst, protocol }
@@ -20,6 +21,7 @@ export default function PacketSimulator() {
         const matched = matchAcl(packet)
         setLastMatchedRule(matched)
         setResult(matched ? matched.action : "DROP")
+        setAnimKey(k => k + 1)
     }
 
     return (
@@ -62,10 +64,13 @@ export default function PacketSimulator() {
                     Send Packet
                 </button>
                 {result && (
-                    <div className={`text-sm font-bold px-3 py-1 rounded border ${result === "ACCEPT"
-                        ? "text-green-400 border-green-700 bg-green-950"
-                        : "text-red-400 border-red-700 bg-red-950"
-                        }`}>
+                    <div
+                        key={animKey}
+                        className={`text-sm font-bold px-3 py-1 rounded border animate-pulse ${result === "ACCEPT"
+                            ? "text-green-400 border-green-700 bg-green-950"
+                            : "text-red-400 border-red-700 bg-red-950"
+                            }`}
+                    >
                         {result}
                     </div>
                 )}
