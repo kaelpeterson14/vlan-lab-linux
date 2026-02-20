@@ -42,7 +42,6 @@ The lab simulates four network zones:
 | Management  | Admin network        | 192.168.99.0/24  | br99   | 192.168.99.1    |
 
 Topology diagram:
-
 ```text
             (router namespace)
    ---------------------------------
@@ -54,6 +53,7 @@ Topology diagram:
     host1    host2    guest1    mgmt1
 ```
 
+---
 
 ## Concept Mapping
 
@@ -67,6 +67,8 @@ Topology diagram:
 | ACL                | iptables `FORWARD` rules           |
 | Default gateway    | Router interface IP                |
 
+---
+
 ## Project Phases
 
 **Phase 2 — Layer 2 Segmentation**
@@ -74,22 +76,15 @@ Topology diagram:
 Creates isolated broadcast domains.
 
 Components:
-
-Linux bridges (br10, br20, br30, br99)
-
-Host namespaces
-
-veth connections between hosts and bridges
-
-IP address assignment
+- Linux bridges (br10, br20, br30, br99)
+- Host namespaces
+- veth connections between hosts and bridges
+- IP address assignment
 
 Behavior:
-
-ARP works within each bridge
-
-Broadcast traffic remains isolated
-
-No inter-network communication possible
+- ARP works within each bridge
+- Broadcast traffic remains isolated
+- No inter-network communication possible
 
 Equivalent to VLAN isolation at Layer 2.
 
@@ -98,20 +93,14 @@ Equivalent to VLAN isolation at Layer 2.
 Adds Layer 3 routing between networks.
 
 Components:
-
-Router namespace
-
-Router interfaces connected to each bridge
-
-Default gateways configured on hosts
-
-IPv4 forwarding enabled
+- Router namespace
+- Router interfaces connected to each bridge
+- Default gateways configured on hosts
+- IPv4 forwarding enabled
 
 Behavior:
-
-host1 → router → host2
-
-Inter-network communication becomes possible.
+- host1 → router → host2
+- Inter-network communication becomes possible
 
 Equivalent to router-on-a-stick or Layer 3 switch routing.
 
@@ -120,18 +109,14 @@ Equivalent to router-on-a-stick or Layer 3 switch routing.
 Implements stateful security boundaries between networks.
 
 Firewall policy:
-
-Default FORWARD policy: DROP
-
-Allow ESTABLISHED,RELATED traffic
-
-Allow Users → Servers
-
-Allow Management → Anywhere
-
-Block Guest → Internal networks
+- Default FORWARD policy: DROP
+- Allow ESTABLISHED,RELATED traffic
+- Allow Users → Servers
+- Allow Management → Anywhere
+- Block Guest → Internal networks
 
 Behavior:
+
 | Source                | Destination        | Result  |
 | --------------------- | ------------------ | ------- |
 | Users → Servers       | Servers subnet     | Allowed |
@@ -142,8 +127,9 @@ Behavior:
 
 Stateful behavior implemented using conntrack.
 
-## Repository Structure
+---
 
+## Repository Structure
 ```text
 scripts/
 ├── phase2.sh     # Layer 2 topology creation
@@ -152,32 +138,89 @@ scripts/
 ├── clean.sh      # Environment teardown
 └── run_lab.sh    # Full lab execution
 ```
+
+---
+
 ## Running the Lab
+
 From the repository root:
+```bash
 chmod +x scripts/*.sh
 sudo ./scripts/run_lab.sh
+```
 
-This performs the following sequence:
-clean → phase2 → phase3 → acl
+This performs the following sequence: clean → phase2 → phase3 → acl
+
+---
 
 ## Verification Examples
 
 Example validation commands:
-
+```bash
 ip netns exec host1 ping 192.168.20.2
-
 ip netns exec guest1 ping 192.168.20.2
-
 ip netns exec router iptables -L -v
-
 ip netns exec router conntrack -L
+```
 
 Expected results:
+- Users → Servers succeeds
+- Guest → internal networks blocked
+- Management → all networks succeeds
+- Reply traffic allowed via state tracking
 
-Users → Servers succeeds
+---
 
-Guest → internal networks blocked
+## Visualizer
 
-Management → all networks succeeds
+The `visualiser/` directory contains an interactive React web app that makes the lab topology visible and educational.
 
-Reply traffic allowed via state tracking
+### Features
+
+- **Topology Canvas** — Live React Flow diagram of all namespaces, bridges, and veth connections
+- **Phase Toggle** — Switch between Phase 2, 3, and 4 to watch nodes and edges appear and disappear
+- **Node Inspector** — Click any node to see its interfaces, IP addresses, and plain English description
+- **ACL Inspector** — Phase 4 shows the full iptables FORWARD chain with each rule explained
+- **Packet Simulator** — Pick a source, destination, and protocol, send a packet, and see which ACL rule matched and whether it was accepted or dropped
+- **Concepts Panel** — Persistent Linux primitive → real networking gear reference
+
+### Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| React + TypeScript | UI framework |
+| Vite | Build tool |
+| Tailwind CSS v4 | Styling |
+| React Flow | Network topology diagram |
+| Zustand | UI state management |
+
+### Running the Visualizer
+```bash
+cd visualiser
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Visualizer Structure
+```text
+visualiser/
+└── src/
+    ├── data/
+    │   └── topology.ts         # Source of truth — all nodes, edges, ACL rules, phases
+    ├── store/
+    │   └── labStore.ts         # Zustand state — phase, selection, packet simulation
+    ├── components/
+    │   ├── TopologyCanvas.tsx  # React Flow canvas
+    │   ├── NetworkNode.tsx     # Custom namespace node
+    │   ├── BridgeNode.tsx      # Custom bridge node
+    │   ├── PhaseToggle.tsx     # Phase 2/3/4 control
+    │   ├── AclInspector.tsx    # ACL rules sidebar
+    │   ├── PacketSimulator.tsx # Packet send and ACL match UI
+    │   ├── NodeInspector.tsx   # Click-to-inspect node detail
+    │   └── ConceptsPanel.tsx   # Linux → real network reference
+    └── utils/
+        └── matchAcl.ts         # Pure ACL evaluation logic
+```
+
