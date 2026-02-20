@@ -1,6 +1,7 @@
 import TopologyCanvas from './components/TopologyCanvas'
 import PhaseToggle from './components/PhaseToggle'
 import AclInspector from './components/AclInspector'
+import PacketSimulator from './components/PacketSimulator'
 import { useLabStore } from './store/labstore'
 
 function App() {
@@ -13,8 +14,11 @@ function App() {
         <PhaseToggle />
       </div>
       <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1">
-          <TopologyCanvas />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1">
+            <TopologyCanvas />
+          </div>
+          {currentPhase === 4 && <PacketSimulator />}
         </div>
         {currentPhase === 4 && <AclInspector />}
       </div>
